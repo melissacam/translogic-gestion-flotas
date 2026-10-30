@@ -1,0 +1,16 @@
+{
+  "name": "translogic-gestion-flotas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TRANSLOGIC S.A. — Sistema inteligente de gestión de flotas, servicios y facturación (monorepo)",
+  "scripts": {
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install",
+    "dev": "concurrently -n api,web -c green,blue \"npm --prefix backend run start:dev\" \"npm --prefix frontend run dev\"",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "test": "npm --prefix backend test && npm --prefix backend run test:e2e",
+    "lint": "npm --prefix backend run lint && npm --prefix backend run typecheck && npm --prefix frontend run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}
