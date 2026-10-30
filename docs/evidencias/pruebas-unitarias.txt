@@ -1,0 +1,10 @@
+# Pruebas unitarias — 2026-10-30T14:32:22Z — Node v24.21.0
+
+> translogic-backend@0.0.1 test
+> node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js --verbose
+
+Test Suites: 6 passed, 6 total
+Tests:       32 passed, 32 total
+Snapshots:   0 total
+Time:        2.678 s
+Ran all test suites.

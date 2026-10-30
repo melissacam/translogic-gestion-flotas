@@ -1,0 +1,29 @@
+# migrate:up + migrate:status + seed contra MongoDB Atlas (translogic_db) — 2026-10-30T14:20:19Z
+
+> translogic-backend@0.0.1 migrate:up
+> migrate-mongo up -f migrations/migrate-mongo-config.js
+
+MIGRATED UP: 001-crear-colecciones-validadores.js
+MIGRATED UP: 002-indices-unicidad.js
+MIGRATED UP: 003-contadores.js
+
+> translogic-backend@0.0.1 migrate:status
+> migrate-mongo status -f migrations/migrate-mongo-config.js
+
+┌──────────────────────────────────────┬──────────────────────────┬─────────────────┐
+│ Filename                             │ Applied At               │ Migration block │
+├──────────────────────────────────────┼──────────────────────────┼─────────────────┤
+│ 001-crear-colecciones-validadores.js │ 2026-10-30T14:20:27.729Z │ 1793370026583   │
+├──────────────────────────────────────┼──────────────────────────┼─────────────────┤
+│ 002-indices-unicidad.js              │ 2026-10-30T14:20:30.070Z │ 1793370026583   │
+├──────────────────────────────────────┼──────────────────────────┼─────────────────┤
+│ 003-contadores.js                    │ 2026-10-30T14:20:30.444Z │ 1793370026583   │
+└──────────────────────────────────────┴──────────────────────────┴─────────────────┘
+
+> translogic-backend@0.0.1 seed
+> ts-node -r tsconfig-paths/register src/seed/seed.ts
+
+[seed] Colecciones vaciadas (changelog intacto)
+[seed] 8 clientes, 10 vehículos, 64 servicios, 177 cambios de estado
+[seed] 27 facturas emitidas para los meses anteriores
+[seed] Usuarios: admin@translogic.ec / Admin123* · operador@translogic.ec / Operador123*

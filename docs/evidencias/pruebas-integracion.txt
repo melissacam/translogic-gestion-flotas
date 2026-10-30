@@ -1,0 +1,10 @@
+# Pruebas de integración — 2026-10-30T14:32:26Z — MongoMemoryReplSet
+
+> translogic-backend@0.0.1 test:e2e
+> node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js --config ./test/jest-e2e.json --runInBand --verbose
+
+Test Suites: 4 passed, 4 total
+Tests:       36 passed, 36 total
+Snapshots:   0 total
+Time:        15.793 s, estimated 17 s
+Ran all test suites.

@@ -1,0 +1,57 @@
+# Flujo e2e TRANSLOGIC — 2026-10-30T14:21:42.099Z
+API: http://localhost:3000/api
+
+## 1. Login administrador
+POST /auth/login → 200 (388 ms)
+Usuario: Andrea Salazar (ADMINISTRADOR)
+
+## 2. Crear camión de carga
+POST /vehiculos → 201 (299 ms)
+Vehículo TLD-2083 · id 6ae4a7f6a51da4a5d177fdc8
+
+## 3. Crear cliente
+POST /clientes → 201 (265 ms)
+Cliente Cliente Demo 102083 · id 6ae4a7f6a51da4a5d177fdc9
+
+## 4. Crear servicio (PROGRAMADO, sin vehículo)
+POST /servicios → 201 (676 ms)
+Servicio SRV-DEMO-102083 · estado PROGRAMADO
+
+## 5. Simular tarifa (no persiste)
+POST /servicios/simular-tarifa → 200 (146 ms)
+Costo operativo 170.00 · base 229.50 · ajuste 8 % · tarifa 247.86 · recargos 0.00 · importe 247.86
+
+## 6. Asignar vehículo (transacción + control de concurrencia)
+PATCH /servicios/6ae4a7f7a51da4a5d177fdca/asignacion → 200 (741 ms)
+Tarifa persistida 247.86 (recalculada por el backend)
+
+## 7. Iniciar servicio
+PATCH /servicios/6ae4a7f7a51da4a5d177fdca/estado → 200 (933 ms)
+
+## 8. Completar servicio
+PATCH /servicios/6ae4a7f7a51da4a5d177fdca/estado → 200 (700 ms)
+Estado COMPLETADO · kilometrajeAplicado true
+
+## 8b. Verificar kilometraje del vehículo
+GET /vehiculos/6ae4a7f6a51da4a5d177fdc8 → 200 (116 ms)
+Kilometraje 1000 → 1200 · estado DISPONIBLE
+
+## 8c. Historial de estados
+GET /servicios/6ae4a7f7a51da4a5d177fdca/historial → 200 (124 ms)
+  — → PROGRAMADO por Andrea Salazar
+  PROGRAMADO → EN_EJECUCION por Andrea Salazar
+  EN_EJECUCION → COMPLETADO por Andrea Salazar
+
+## 9. Generar factura (transacción atómica)
+POST /facturas → 201 (1077 ms)
+Factura FAC-202610-0001 · subtotal 247.86 · recargos 0.00 · descuento 0.00 · IVA 37.18 · TOTAL 285.04
+
+## 10. Descargar comprobante PDF
+GET /facturas/6ae4a7faa51da4a5d177fdce/pdf → 200 (132 ms)
+PDF guardado (2506 bytes) → docs/evidencias/factura-ejemplo.pdf
+
+## 11. Consultar rentabilidad del mes
+GET /reportes/rentabilidad?anio=2026&mes=10 → 200 (140 ms)
+KPIs 2026-10: {"ingresos":"969.51","costos":"667.63","servicios":9,"utilidad":"301.88","margen":"31.14"}
+
+RESULTADO: flujo completo OK

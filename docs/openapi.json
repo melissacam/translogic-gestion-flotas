@@ -1,0 +1,1765 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "{ accessToken, usuario { id, nombre, email, rol } }"
+          },
+          "401": {
+            "description": "Credenciales inválidas"
+          },
+          "429": {
+            "description": "Demasiados intentos"
+          }
+        },
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/api/auth/perfil": {
+      "get": {
+        "operationId": "AuthController_perfil",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Usuario de la sesión actual"
+          },
+          "401": {
+            "description": "Token ausente o expirado"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/api/usuarios": {
+      "get": {
+        "operationId": "UsuariosController_listar",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Usuarios del sistema (sin hash de contraseña)"
+          },
+          "403": {
+            "description": "Solo ADMINISTRADOR"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Usuarios"
+        ]
+      }
+    },
+    "/api/clientes": {
+      "get": {
+        "operationId": "ClientesController_listar",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Object"
+                }
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "example": 10,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Object"
+                }
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Busca por nombre o identificación",
+            "schema": {
+              "example": "andina",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada { data, total, page, limit, totalPages }"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Clientes"
+        ]
+      },
+      "post": {
+        "operationId": "ClientesController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearClienteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cliente creado"
+          },
+          "409": {
+            "description": "Identificación duplicada"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Clientes"
+        ]
+      }
+    },
+    "/api/clientes/{id}": {
+      "get": {
+        "operationId": "ClientesController_obtener",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente"
+          },
+          "404": {
+            "description": "No existe"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Clientes"
+        ]
+      },
+      "patch": {
+        "operationId": "ClientesController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarClienteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cliente actualizado"
+          },
+          "403": {
+            "description": "Solo ADMINISTRADOR"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Clientes"
+        ]
+      },
+      "delete": {
+        "operationId": "ClientesController_eliminar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente eliminado"
+          },
+          "409": {
+            "description": "Tiene servicios registrados"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Clientes"
+        ]
+      }
+    },
+    "/api/vehiculos": {
+      "get": {
+        "operationId": "VehiculosController_listar",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Object"
+                }
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "example": 10,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Object"
+                }
+              ]
+            }
+          },
+          {
+            "name": "tipo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CAMION_CARGA",
+                "FURGONETA_ELECTRICA"
+              ]
+            }
+          },
+          {
+            "name": "estado",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DISPONIBLE",
+                "EN_SERVICIO",
+                "MANTENIMIENTO",
+                "INACTIVO"
+              ]
+            }
+          },
+          {
+            "name": "placa",
+            "required": false,
+            "in": "query",
+            "description": "Coincidencia parcial de placa",
+            "schema": {
+              "example": "GBA",
+              "type": "string"
+            }
+          },
+          {
+            "name": "asignables",
+            "required": false,
+            "in": "query",
+            "description": "Solo vehículos que pueden recibir servicios",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada con filtros tipo, estado y placa parcial"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Vehículos"
+        ]
+      },
+      "post": {
+        "operationId": "VehiculosController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearVehiculoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Vehículo creado"
+          },
+          "400": {
+            "description": "Datos inválidos para el tipo"
+          },
+          "403": {
+            "description": "Solo ADMINISTRADOR"
+          },
+          "409": {
+            "description": "Placa duplicada"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Vehículos"
+        ]
+      }
+    },
+    "/api/vehiculos/placa/{placa}": {
+      "get": {
+        "operationId": "VehiculosController_porPlaca",
+        "parameters": [
+          {
+            "name": "placa",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vehículo por placa exacta (normalizada)"
+          },
+          "404": {
+            "description": "No existe"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Vehículos"
+        ]
+      }
+    },
+    "/api/vehiculos/{id}/eficiencia": {
+      "get": {
+        "operationId": "VehiculosController_eficiencia",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Eficiencia km/USD, costo por km y comparación con su categoría"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Vehículos"
+        ]
+      }
+    },
+    "/api/vehiculos/{id}": {
+      "get": {
+        "operationId": "VehiculosController_obtener",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vehículo (incluye autonomía disponible si es furgoneta)"
+          },
+          "404": {
+            "description": "No existe"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Vehículos"
+        ]
+      },
+      "patch": {
+        "operationId": "VehiculosController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarVehiculoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vehículo actualizado"
+          },
+          "403": {
+            "description": "OPERADOR solo edita kilometraje, batería y estado"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Vehículos"
+        ]
+      },
+      "delete": {
+        "operationId": "VehiculosController_desactivar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vehículo desactivado (borrado lógico a INACTIVO)"
+          },
+          "409": {
+            "description": "Tiene servicios activos"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Vehículos"
+        ]
+      }
+    },
+    "/api/servicios": {
+      "get": {
+        "operationId": "ServiciosController_listar",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Object"
+                }
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "example": 10,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Object"
+                }
+              ]
+            }
+          },
+          {
+            "name": "estado",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PROGRAMADO",
+                "EN_EJECUCION",
+                "COMPLETADO",
+                "CANCELADO"
+              ]
+            }
+          },
+          {
+            "name": "clienteId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vehiculoId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tipoVehiculo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CAMION_CARGA",
+                "FURGONETA_ELECTRICA"
+              ]
+            }
+          },
+          {
+            "name": "desde",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "2026-10-01",
+              "type": "string"
+            }
+          },
+          {
+            "name": "hasta",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "2026-10-31",
+              "type": "string"
+            }
+          },
+          {
+            "name": "codigo",
+            "required": false,
+            "in": "query",
+            "description": "Coincidencia parcial",
+            "schema": {
+              "example": "SRV-2026",
+              "type": "string"
+            }
+          },
+          {
+            "name": "facturado",
+            "required": false,
+            "in": "query",
+            "description": "false = completados pendientes de facturar",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "campo:asc|desc; campos: fecha, codigo, tarifa, distanciaKm, estado",
+            "schema": {
+              "example": "fecha:desc",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{ data, total, page, limit, totalPages } con filtros combinables"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Servicios de transporte"
+        ]
+      },
+      "post": {
+        "operationId": "ServiciosController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearServicioDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Servicio creado en PROGRAMADO"
+          },
+          "400": {
+            "description": "Datos inválidos (p. ej. distancia ≤ 0)"
+          },
+          "409": {
+            "description": "Código duplicado o vehículo ocupado en ese horario"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Servicios de transporte"
+        ]
+      }
+    },
+    "/api/servicios/simular-tarifa": {
+      "post": {
+        "operationId": "ServiciosController_simular",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimularTarifaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Desglose de tarifa sin persistir (incluye recargos informativos)"
+          },
+          "422": {
+            "description": "Carga mayor a la capacidad u otros datos inválidos"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Servicios de transporte"
+        ]
+      }
+    },
+    "/api/servicios/{id}": {
+      "get": {
+        "operationId": "ServiciosController_obtener",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Servicio con cliente, vehículo y desglose de cálculo"
+          },
+          "404": {
+            "description": "No existe"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Servicios de transporte"
+        ]
+      },
+      "patch": {
+        "operationId": "ServiciosController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarServicioDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Servicio actualizado y tarifa recalculada"
+          },
+          "409": {
+            "description": "No está PROGRAMADO, versión desactualizada o solapamiento"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Servicios de transporte"
+        ]
+      }
+    },
+    "/api/servicios/{id}/historial": {
+      "get": {
+        "operationId": "ServiciosController_historial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Historial de estados con el nombre del usuario"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Servicios de transporte"
+        ]
+      }
+    },
+    "/api/servicios/{id}/asignacion": {
+      "patch": {
+        "operationId": "ServiciosController_asignar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsignarVehiculoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vehículo asignado y tarifa calculada"
+          },
+          "409": {
+            "description": "Otro servicio usa el vehículo en ese horario"
+          },
+          "422": {
+            "description": "Capacidad excedida o vehículo no disponible"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Servicios de transporte"
+        ]
+      }
+    },
+    "/api/servicios/{id}/estado": {
+      "patch": {
+        "operationId": "ServiciosController_cambiarEstado",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CambiarEstadoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Estado cambiado y registrado en el historial"
+          },
+          "409": {
+            "description": "Transición no permitida por la máquina de estados"
+          },
+          "422": {
+            "description": "Sin vehículo o energía insuficiente"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Servicios de transporte"
+        ]
+      }
+    },
+    "/api/facturas/simular": {
+      "post": {
+        "operationId": "FacturasController_simular",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearFacturaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Desglose de la factura sin guardar"
+          },
+          "403": {
+            "description": "Solo ADMINISTRADOR"
+          },
+          "422": {
+            "description": "Servicios no completados o de otro cliente"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Facturas"
+        ]
+      }
+    },
+    "/api/facturas": {
+      "post": {
+        "operationId": "FacturasController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearFacturaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Factura emitida en una sola transacción"
+          },
+          "403": {
+            "description": "Solo ADMINISTRADOR"
+          },
+          "409": {
+            "description": "Algún servicio ya fue facturado"
+          },
+          "422": {
+            "description": "Servicios inválidos; no se guarda nada"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Facturas"
+        ]
+      },
+      "get": {
+        "operationId": "FacturasController_listar",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Object"
+                }
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "example": 10,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Object"
+                }
+              ]
+            }
+          },
+          {
+            "name": "clienteId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mes",
+            "required": false,
+            "in": "query",
+            "description": "Periodo AAAA-MM",
+            "schema": {
+              "example": "2026-10",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Facturas paginadas, filtro por cliente y mes"
+          },
+          "403": {
+            "description": "Solo ADMINISTRADOR"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Facturas"
+        ]
+      }
+    },
+    "/api/facturas/{id}": {
+      "get": {
+        "operationId": "FacturasController_obtener",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Factura con cliente y detalles"
+          },
+          "403": {
+            "description": "Solo ADMINISTRADOR"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Facturas"
+        ]
+      }
+    },
+    "/api/facturas/{id}/pdf": {
+      "get": {
+        "operationId": "FacturasController_pdf",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "665f1c2b9a1e4b3d8c7a1234",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comprobante simulado en PDF"
+          },
+          "403": {
+            "description": "Solo ADMINISTRADOR"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Facturas"
+        ]
+      }
+    },
+    "/api/reportes/operaciones": {
+      "get": {
+        "operationId": "ReportesController_operaciones",
+        "parameters": [
+          {
+            "name": "consulta",
+            "required": true,
+            "in": "query",
+            "description": "Número de consulta avanzada",
+            "schema": {
+              "minimum": 1,
+              "maximum": 8,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "desde",
+            "required": false,
+            "in": "query",
+            "description": "Consultas 3, 4 y 6",
+            "schema": {
+              "example": "2026-10-01",
+              "type": "string"
+            }
+          },
+          {
+            "name": "hasta",
+            "required": false,
+            "in": "query",
+            "description": "Consultas 3, 4 y 6",
+            "schema": {
+              "example": "2026-10-31",
+              "type": "string"
+            }
+          },
+          {
+            "name": "mes",
+            "required": false,
+            "in": "query",
+            "description": "Consulta 8 (AAAA-MM)",
+            "schema": {
+              "example": "2026-10",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resultado de la consulta avanzada N (1 a 8)"
+          },
+          "403": {
+            "description": "Solo ADMINISTRADOR"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Reportes"
+        ]
+      }
+    },
+    "/api/reportes/rentabilidad": {
+      "get": {
+        "operationId": "ReportesController_rentabilidad",
+        "parameters": [
+          {
+            "name": "anio",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "example": 2026,
+              "type": "number"
+            }
+          },
+          {
+            "name": "mes",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 12,
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "tipo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CAMION_CARGA",
+                "FURGONETA_ELECTRICA"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "kpis, serviciosPorEstado, distribucionPorTipo, comparacionMensual y porVehiculo"
+          },
+          "403": {
+            "description": "Solo ADMINISTRADOR"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Reportes"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "TRANSLOGIC S.A. — API de gestión de flotas",
+    "description": "Flotas, servicios de transporte, tarifas polimórficas, facturación atómica y reportes. Importes como string con 2 decimales.",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "admin@translogic.ec"
+          },
+          "password": {
+            "type": "string",
+            "example": "Admin123*"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "Object": {
+        "type": "object",
+        "properties": {}
+      },
+      "CrearClienteDto": {
+        "type": "object",
+        "properties": {
+          "identificacion": {
+            "type": "string",
+            "example": "0991234567001",
+            "description": "Cédula (10 dígitos) o RUC (13 dígitos)"
+          },
+          "nombre": {
+            "type": "string",
+            "example": "Comercial Andina S.A."
+          },
+          "correo": {
+            "type": "string",
+            "example": "compras@andina.ec"
+          },
+          "telefono": {
+            "type": "string",
+            "example": "0991234567"
+          },
+          "direccion": {
+            "type": "string",
+            "example": "Av. 9 de Octubre 100, Guayaquil"
+          }
+        },
+        "required": [
+          "identificacion",
+          "nombre",
+          "correo",
+          "telefono"
+        ]
+      },
+      "ActualizarClienteDto": {
+        "type": "object",
+        "properties": {
+          "identificacion": {
+            "type": "string",
+            "example": "0991234567001",
+            "description": "Cédula (10 dígitos) o RUC (13 dígitos)"
+          },
+          "nombre": {
+            "type": "string",
+            "example": "Comercial Andina S.A."
+          },
+          "correo": {
+            "type": "string",
+            "example": "compras@andina.ec"
+          },
+          "telefono": {
+            "type": "string",
+            "example": "0991234567"
+          },
+          "direccion": {
+            "type": "string",
+            "example": "Av. 9 de Octubre 100, Guayaquil"
+          }
+        }
+      },
+      "CrearVehiculoDto": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "CAMION_CARGA",
+              "FURGONETA_ELECTRICA"
+            ],
+            "example": "CAMION_CARGA"
+          },
+          "placa": {
+            "type": "string",
+            "example": "GBA-1234",
+            "description": "Se normaliza a mayúsculas sin espacios"
+          },
+          "marca": {
+            "type": "string",
+            "example": "Hino"
+          },
+          "modelo": {
+            "type": "string",
+            "example": "Serie 500"
+          },
+          "anio": {
+            "type": "number",
+            "example": 2022,
+            "minimum": 1990
+          },
+          "capacidadCargaKg": {
+            "type": "number",
+            "example": 10000
+          },
+          "kilometraje": {
+            "type": "number",
+            "example": 0
+          },
+          "consumoLitros100Km": {
+            "type": "number",
+            "example": 30,
+            "description": "Solo camión"
+          },
+          "precioLitro": {
+            "type": "number",
+            "example": 2.5,
+            "description": "Solo camión (USD por litro)"
+          },
+          "numeroEjes": {
+            "type": "number",
+            "example": 3,
+            "description": "Solo camión"
+          },
+          "costoMantenimientoKm": {
+            "type": "number",
+            "example": 0.1,
+            "description": "Solo camión (USD por km)"
+          },
+          "capacidadBateriaKWh": {
+            "type": "number",
+            "example": 60,
+            "description": "Solo furgoneta"
+          },
+          "consumoKWh100Km": {
+            "type": "number",
+            "example": 20,
+            "description": "Solo furgoneta"
+          },
+          "costoKWh": {
+            "type": "number",
+            "example": 0.1,
+            "description": "Solo furgoneta (USD por kWh)"
+          },
+          "autonomiaKm": {
+            "type": "number",
+            "example": 200,
+            "description": "Solo furgoneta (km con batería al 100 %)"
+          },
+          "porcentajeBateria": {
+            "type": "number",
+            "example": 80,
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Solo furgoneta"
+          }
+        },
+        "required": [
+          "tipo",
+          "placa",
+          "marca",
+          "modelo",
+          "anio",
+          "capacidadCargaKg"
+        ]
+      },
+      "ActualizarVehiculoDto": {
+        "type": "object",
+        "properties": {
+          "placa": {
+            "type": "string",
+            "example": "GBA-1234"
+          },
+          "marca": {
+            "type": "string",
+            "example": "Hino"
+          },
+          "modelo": {
+            "type": "string",
+            "example": "Serie 500"
+          },
+          "anio": {
+            "type": "number",
+            "example": 2022
+          },
+          "capacidadCargaKg": {
+            "type": "number",
+            "example": 10000
+          },
+          "kilometraje": {
+            "type": "number",
+            "example": 125000
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "DISPONIBLE",
+              "MANTENIMIENTO"
+            ],
+            "example": "MANTENIMIENTO"
+          },
+          "consumoLitros100Km": {
+            "type": "number",
+            "example": 30
+          },
+          "precioLitro": {
+            "type": "number",
+            "example": 2.5
+          },
+          "numeroEjes": {
+            "type": "number",
+            "example": 3
+          },
+          "costoMantenimientoKm": {
+            "type": "number",
+            "example": 0.1
+          },
+          "capacidadBateriaKWh": {
+            "type": "number",
+            "example": 60
+          },
+          "consumoKWh100Km": {
+            "type": "number",
+            "example": 20
+          },
+          "costoKWh": {
+            "type": "number",
+            "example": 0.1
+          },
+          "autonomiaKm": {
+            "type": "number",
+            "example": 200
+          },
+          "porcentajeBateria": {
+            "type": "number",
+            "example": 80,
+            "minimum": 0,
+            "maximum": 100
+          }
+        }
+      },
+      "SimularTarifaDto": {
+        "type": "object",
+        "properties": {
+          "vehiculoId": {
+            "type": "string",
+            "example": "665f1c2b9a1e4b3d8c7a5678"
+          },
+          "distanciaKm": {
+            "type": "number",
+            "example": 200
+          },
+          "pesoCargaKg": {
+            "type": "number",
+            "example": 5000
+          },
+          "fecha": {
+            "type": "string",
+            "example": "2026-11-08"
+          },
+          "horaInicio": {
+            "type": "string",
+            "example": "08:00"
+          }
+        },
+        "required": [
+          "vehiculoId",
+          "distanciaKm",
+          "pesoCargaKg",
+          "fecha"
+        ]
+      },
+      "CrearServicioDto": {
+        "type": "object",
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "example": "SRV-2026-0101"
+          },
+          "clienteId": {
+            "type": "string",
+            "example": "665f1c2b9a1e4b3d8c7a1234"
+          },
+          "vehiculoId": {
+            "type": "string",
+            "example": "665f1c2b9a1e4b3d8c7a5678",
+            "description": "Opcional: asigna al crear"
+          },
+          "origen": {
+            "type": "string",
+            "example": "Guayaquil"
+          },
+          "destino": {
+            "type": "string",
+            "example": "Quito"
+          },
+          "distanciaKm": {
+            "type": "number",
+            "example": 200,
+            "description": "Mayor a 0"
+          },
+          "pesoCargaKg": {
+            "type": "number",
+            "example": 5000,
+            "description": "Cero o positivo"
+          },
+          "fecha": {
+            "type": "string",
+            "example": "2026-11-03",
+            "description": "AAAA-MM-DD (zona America/Guayaquil)"
+          },
+          "horaInicio": {
+            "type": "string",
+            "example": "08:00"
+          },
+          "horaFinEstimada": {
+            "type": "string",
+            "example": "12:00"
+          },
+          "recargaPlanificada": {
+            "type": "boolean",
+            "example": false,
+            "description": "Furgonetas: recarga prevista en ruta"
+          }
+        },
+        "required": [
+          "codigo",
+          "clienteId",
+          "origen",
+          "destino",
+          "distanciaKm",
+          "pesoCargaKg",
+          "fecha",
+          "horaInicio",
+          "horaFinEstimada"
+        ]
+      },
+      "ActualizarServicioDto": {
+        "type": "object",
+        "properties": {
+          "clienteId": {
+            "type": "string",
+            "example": "665f1c2b9a1e4b3d8c7a1234"
+          },
+          "origen": {
+            "type": "string",
+            "example": "Guayaquil"
+          },
+          "destino": {
+            "type": "string",
+            "example": "Quito"
+          },
+          "distanciaKm": {
+            "type": "number",
+            "example": 200,
+            "description": "Mayor a 0"
+          },
+          "pesoCargaKg": {
+            "type": "number",
+            "example": 5000,
+            "description": "Cero o positivo"
+          },
+          "fecha": {
+            "type": "string",
+            "example": "2026-11-03",
+            "description": "AAAA-MM-DD (zona America/Guayaquil)"
+          },
+          "horaInicio": {
+            "type": "string",
+            "example": "08:00"
+          },
+          "horaFinEstimada": {
+            "type": "string",
+            "example": "12:00"
+          },
+          "recargaPlanificada": {
+            "type": "boolean",
+            "example": false,
+            "description": "Furgonetas: recarga prevista en ruta"
+          },
+          "version": {
+            "type": "number",
+            "example": 2,
+            "description": "Versión leída (bloqueo optimista)"
+          }
+        }
+      },
+      "AsignarVehiculoDto": {
+        "type": "object",
+        "properties": {
+          "vehiculoId": {
+            "type": "string",
+            "example": "665f1c2b9a1e4b3d8c7a5678"
+          },
+          "version": {
+            "type": "number",
+            "example": 0,
+            "description": "Versión del servicio que vio el usuario"
+          }
+        },
+        "required": [
+          "vehiculoId"
+        ]
+      },
+      "CambiarEstadoDto": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "enum": [
+              "PROGRAMADO",
+              "EN_EJECUCION",
+              "COMPLETADO",
+              "CANCELADO"
+            ],
+            "example": "EN_EJECUCION"
+          },
+          "recargaPlanificada": {
+            "type": "boolean",
+            "example": true,
+            "description": "Al iniciar una furgoneta: recarga prevista"
+          },
+          "observacion": {
+            "type": "string",
+            "example": "Cliente solicitó cancelar"
+          }
+        },
+        "required": [
+          "estado"
+        ]
+      },
+      "CrearFacturaDto": {
+        "type": "object",
+        "properties": {
+          "clienteId": {
+            "type": "string",
+            "example": "665f1c2b9a1e4b3d8c7a1234"
+          },
+          "servicioIds": {
+            "example": [
+              "665f1c2b9a1e4b3d8c7a9999"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fecha": {
+            "type": "string",
+            "example": "2026-10-31",
+            "description": "Por defecto hoy (America/Guayaquil)"
+          }
+        },
+        "required": [
+          "clienteId",
+          "servicioIds"
+        ]
+      }
+    }
+  }
+}
