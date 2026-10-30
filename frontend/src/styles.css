@@ -1,0 +1,103 @@
+@import 'tailwindcss';
+
+/* Paleta única de la app (también la usan los gráficos y el PDF) */
+@theme {
+  --color-fondo: #f6f5f1;
+  --color-superficie: #ffffff;
+  --color-borde: #e4e2da;
+  --color-tinta: #2e3338;
+  --color-tinta-suave: #5f6670;
+  --color-salvia: #a9c5b4;
+  --color-salvia-fuerte: #4d7a5f;
+  --color-pervinca: #bac3e3;
+  --color-mantequilla: #f1e3b3;
+  --color-melocoton: #f2cdb9;
+  --color-menta-cielo: #b9dce3;
+  --color-rosa-polvo: #e9bfc5;
+  --color-error: #9b3b48;
+
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+
+  --radius-app: 12px;
+  --shadow-suave: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-fondo text-tinta font-sans text-base;
+    line-height: 1.5;
+    min-height: 100dvh;
+  }
+  h1,
+  h2,
+  h3 {
+    line-height: 1.3;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-salvia-fuerte);
+    outline-offset: 2px;
+  }
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .tarjeta {
+    @apply bg-superficie border border-borde rounded-app shadow-suave;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 min-h-11 px-4 rounded-app border text-sm font-semibold transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer;
+  }
+  .btn-primario {
+    @apply bg-salvia-fuerte border-salvia-fuerte text-white hover:bg-[#426b52];
+  }
+  .btn-secundario {
+    @apply bg-superficie border-borde text-tinta hover:bg-fondo;
+  }
+  .btn-peligro {
+    @apply bg-superficie border-rosa-polvo text-error hover:bg-rosa-polvo/30;
+  }
+  .campo {
+    @apply w-full min-h-11 px-3 rounded-app border border-borde bg-superficie text-tinta placeholder:text-tinta-suave;
+  }
+  .campo[aria-invalid='true'] {
+    @apply border-error;
+  }
+  .etiqueta {
+    @apply block text-sm font-medium text-tinta mb-1;
+  }
+  .error-campo {
+    @apply text-sm text-error mt-1 min-h-5;
+  }
+  .insignia {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-sm font-medium text-tinta whitespace-nowrap;
+  }
+  .esqueleto {
+    @apply bg-borde/70 rounded-app animate-pulse;
+  }
+  .toasts {
+    @apply fixed z-50 left-4 right-4 bottom-24 md:left-auto md:right-6 md:bottom-6 md:w-96 flex flex-col gap-2 pointer-events-none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
